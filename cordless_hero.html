@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>メイン訴求 1080x560</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0a0f1d;
+    -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  #stage { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0;
+    font-family: 'Noto Sans CJK JP', 'Noto Sans JP', 'Source Han Sans JP', 'Hiragino Sans', sans-serif; color: #eef3ff; }
+  .num { font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; }
+  #stage { width: 1080px; height: 560px;
+    background: radial-gradient(ellipse 520px 380px at 930px 250px, rgba(62,240,196,.13), rgba(62,240,196,0) 70%),
+                linear-gradient(120deg, #0d1426 0%, #0a0f1d 60%, #0c1a2a 100%); }
+  .topline { position: absolute; left: 0; top: 0; width: 1080px; height: 4px;
+    background: linear-gradient(90deg, #3ef0c4, #3aa0ff 60%, rgba(58,160,255,0)); }
+  .bottomline { position: absolute; left: 0; bottom: 0; width: 1080px; height: 2px;
+    background: linear-gradient(90deg, rgba(62,240,196,0), rgba(62,240,196,.6) 40%, rgba(58,160,255,.6) 70%, rgba(58,160,255,0)); }
+
+  .eyebrow { position: absolute; left: 66px; top: 50px; font-weight: 300; font-size: 20px;
+    letter-spacing: .34em; opacity: .7; white-space: nowrap; }
+  .product { position: absolute; left: 64px; top: 84px; white-space: nowrap; }
+  .product .bar { display: inline-block; width: 6px; height: 34px; border-radius: 3px; vertical-align: -5px;
+    background: linear-gradient(180deg, #3ef0c4, #3aa0ff); margin-right: 16px; }
+  .product .name { font-size: 38px; font-weight: 500; letter-spacing: .08em; }
+
+  .catch { position: absolute; left: 58px; top: 146px; font-size: 112px; font-weight: 700;
+    line-height: 1.18; letter-spacing: .02em; white-space: nowrap; }
+  .catch .grad { background: linear-gradient(90deg, #3ef0c4 0%, #3aa0ff 50%, #3ef0c4 100%);
+    background-size: 1200px 100%; background-repeat: repeat-x; -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shimmer 6s linear infinite; }
+
+  .bolt { position: absolute; left: 846px; top: 128px; width: 170px; height: 250px; animation: pulse 3s ease-in-out infinite; }
+
+  .feats { position: absolute; left: 64px; top: 438px; width: 960px; height: 82px; }
+  .feat { position: absolute; top: 0; width: 304px; height: 80px; border-radius: 16px;
+    border: 1px solid rgba(238,243,255,.18); background: rgba(238,243,255,.03);
+    transition: background .6s ease, border-color .6s ease; }
+  .feat svg { position: absolute; left: 22px; top: 20px; width: 40px; height: 40px; }
+  .feat svg * { stroke: rgba(238,243,255,.75); transition: stroke .6s ease; }
+  .feat .t { position: absolute; left: 78px; top: 0; line-height: 80px; font-size: 28px; font-weight: 500;
+    letter-spacing: .04em; white-space: nowrap; }
+  .feat.on { border-color: rgba(62,240,196,.85); background: rgba(62,240,196,.12); }
+  .feat.on svg * { stroke: #3ef0c4; }
+
+  @keyframes shimmer { 0% { background-position: 0 0; } 100% { background-position: -1200px 0; } }
+  @keyframes pulse { 0%,100% { opacity: .22; } 50% { opacity: .42; } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="topline"></div>
+
+  <div class="eyebrow num">RECHARGEABLE&nbsp;&nbsp;CORDLESS&nbsp;&nbsp;DISPLAY</div>
+  <div class="product"><span class="bar"></span><span class="name" id="pname"></span></div>
+
+  <div class="catch"><span id="c1"></span><br><span class="grad" id="c2"></span></div>
+
+  <svg class="bolt" viewBox="0 0 48 64" aria-hidden="true">
+    <path d="M28 2 L5 36 H22 L18 62 L43 25 H26 Z" fill="none" stroke="#3ef0c4" stroke-width="1.6" stroke-linejoin="round"/>
+  </svg>
+
+  <div class="feats" id="feats">
+    <div class="feat" style="left:0">
+      <svg viewBox="0 0 40 40" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 6 V13 M26 6 V13 M10 13 H30 V20 A10 10 0 0 1 10 20 Z M20 30 V36"/><path d="M5 35 L35 5"/>
+      </svg>
+      <div class="t" id="f1"></div>
+    </div>
+    <div class="feat" style="left:328px">
+      <svg viewBox="0 0 40 40" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 15 A23 23 0 0 1 36 15 M9 21 A15 15 0 0 1 31 21 M14 27 A8 8 0 0 1 26 27"/><path d="M20 33 L20 33.2"/>
+      </svg>
+      <div class="t" id="f2"></div>
+    </div>
+    <div class="feat" style="left:656px">
+      <svg viewBox="0 0 40 40" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 4 V36 M4 20 H36 M15 9 L20 4 L25 9 M15 31 L20 36 L25 31 M9 15 L4 20 L9 25 M31 15 L36 20 L31 25"/>
+      </svg>
+      <div class="t" id="f3"></div>
+    </div>
+  </div>
+
+  <div class="bottomline"></div>
+</div>
+
+<script>
+  /* ===== 文言の設定（ここを書き換えれば変えられます） ===== */
+  var PRODUCT  = '充電式コードレスモニター';
+  var CATCH_1  = 'コードレスで、';
+  var CATCH_2  = 'どこでも。';
+  var FEATURES = ['電源コード不要', 'Wi-Fiで遠隔更新', '置き場所自由'];
+  var HIGHLIGHT_SEC = 2.5;   /* 特長を1つずつ光らせる間隔（秒） */
+  /* ======================================================== */
+  document.getElementById('pname').textContent = PRODUCT;
+  document.getElementById('c1').textContent = CATCH_1;
+  document.getElementById('c2').textContent = CATCH_2;
+  for (var i = 0; i < 3; i++) document.getElementById('f' + (i + 1)).textContent = FEATURES[i];
+  var feats = document.querySelectorAll('.feat'), cur = -1;
+  function next() {
+    cur = (cur + 1) % feats.length;
+    for (var k = 0; k < feats.length; k++) feats[k].className = 'feat' + (k === cur ? ' on' : '');
+  }
+  next(); setInterval(next, HIGHLIGHT_SEC * 1000);
+</script>
+<script>
+  /* 表示される枠の大きさに合わせて、デザイン全体を縮小する */
+  (function () {
+    var W = 1080, H = 560, st = document.getElementById('stage');
+    function fit() {
+      var vv = window.visualViewport;
+      var w = Math.max(1, (vv && vv.width) || window.innerWidth || W);
+      var h = Math.max(1, (vv && vv.height) || window.innerHeight || H);
+      var s = Math.min(w / W, h / H, 1);
+      if (!(s > 0) || !isFinite(s)) s = 1;
+      st.style.transform = (s === 1) ? 'none' : 'scale(' + s + ')';
+      document.documentElement.style.width = w + 'px';
+      document.documentElement.style.height = h + 'px';
+      document.body.style.width = w + 'px';
+      document.body.style.height = h + 'px';
+    }
+    window.addEventListener('resize', fit);
+    window.addEventListener('orientationchange', function () { setTimeout(fit, 50); });
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', fit);
+    fit(); setTimeout(fit, 0); setTimeout(fit, 100); setTimeout(fit, 500); setTimeout(fit, 2000);
+  })();
+</script>
+</body>
+</html>
