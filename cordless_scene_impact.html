@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=304, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>使い方 インパクト版 304x1000</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0a0f1d;
+    -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  #stage { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0;
+    font-family: 'Noto Sans CJK JP', 'Noto Sans JP', 'Source Han Sans JP', 'Hiragino Sans', sans-serif; color: #eef3ff; }
+  .num { font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; }
+  #stage { width: 304px; height: 1000px; background: repeating-linear-gradient(45deg, #ffd400 0, #ffd400 22px, #111 22px, #111 44px); }
+  .panel { position: absolute; left: 12px; top: 12px; width: 280px; height: 976px; background: #000; }
+  .title { position: absolute; left: 0; top: 0; width: 280px; height: 90px; background: #e60012; color: #ffd400;
+    text-align: center; line-height: 90px; font-size: 34px; font-weight: 900; white-space: nowrap; text-shadow: 3px 3px 0 #000; }
+  .row { position: absolute; left: 8px; width: 264px; height: 132px; background: #ffd400; }
+  .n { position: absolute; left: 10px; top: 14px; width: 46px; height: 46px; border-radius: 23px; background: #e60012;
+    color: #fff; text-align: center; line-height: 46px; font-size: 28px; font-weight: 900; }
+  .t { position: absolute; left: 64px; top: 16px; font-size: 25px; font-weight: 900; color: #000; white-space: nowrap; }
+  .s { position: absolute; left: 12px; top: 78px; font-size: 24px; font-weight: 900; color: #e60012; white-space: nowrap; }
+  .note { position: absolute; left: 8px; top: 838px; width: 264px; height: 128px; background: #e60012; text-align: center;
+    border: 5px solid #fff; box-sizing: border-box; animation: blink .8s steps(1) infinite; }
+  .note .a { margin-top: 14px; font-size: 24px; font-weight: 900; color: #fff; }
+  .note .b { margin-top: 4px; font-size: 38px; font-weight: 900; color: #ffd400; text-shadow: 3px 3px 0 #000; }
+  @keyframes blink { 0% { background: #e60012; } 50% { background: #000; } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="panel">
+    <div class="title">現場でこう使う!!</div>
+    <div class="row" style="top:104px"><div class="n">1</div><div class="t">朝礼・KY活動</div><div class="s">作業内容をドーン！</div></div>
+    <div class="row" style="top:250px"><div class="n">2</div><div class="t">安全の呼びかけ</div><div class="s">注意事項すぐ変更</div></div>
+    <div class="row" style="top:396px"><div class="n">3</div><div class="t">熱中症・天気</div><div class="s">暑さ指数も自動</div></div>
+    <div class="row" style="top:542px"><div class="n">4</div><div class="t">近隣へお知らせ</div><div class="s">工事予定を掲示</div></div>
+    <div class="row" style="top:688px"><div class="n">5</div><div class="t">現場の入口に</div><div class="s">電源なしで設置</div></div>
+    <div class="note"><div class="a">電源がなくても</div><div class="b">即使える!!</div></div>
+  </div>
+</div>
+<script>
+  /* 表示される枠の大きさに合わせて、デザイン全体を縮小する */
+  (function () {
+    var W = 304, H = 1000, st = document.getElementById('stage');
+    function fit() {
+      var vv = window.visualViewport;
+      var w = Math.max(1, (vv && vv.width) || window.innerWidth || W);
+      var h = Math.max(1, (vv && vv.height) || window.innerHeight || H);
+      var s = Math.min(w / W, h / H, 1);
+      if (!(s > 0) || !isFinite(s)) s = 1;
+      st.style.transform = (s === 1) ? 'none' : 'scale(' + s + ')';
+      document.documentElement.style.width = w + 'px';
+      document.documentElement.style.height = h + 'px';
+      document.body.style.width = w + 'px';
+      document.body.style.height = h + 'px';
+    }
+    window.addEventListener('resize', fit);
+    window.addEventListener('orientationchange', function () { setTimeout(fit, 50); });
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', fit);
+    fit(); setTimeout(fit, 0); setTimeout(fit, 100); setTimeout(fit, 500); setTimeout(fit, 2000);
+  })();
+</script>
+</body>
+</html>
