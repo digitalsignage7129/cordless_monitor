@@ -4,14 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=360, height=240, initial-scale=1">
 <title>天気・気温 360x240</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
   html, body { margin: 0; padding: 0; }
   body {
     width: 360px; height: 240px; overflow: hidden; position: relative;
     background: linear-gradient(140deg, #0c1a2a 0%, #0a0f1d 55%, #0d1426 100%);
-    font-family: 'Noto Sans JP', 'Noto Sans CJK JP', sans-serif; color: #eef3ff;
+    font-family: 'Noto Sans CJK JP', 'Noto Sans JP', 'Source Han Sans JP', 'Hiragino Sans', sans-serif; color: #eef3ff;
   }
   .topline { position: absolute; left: 0; top: 0; width: 360px; height: 3px;
     background: linear-gradient(90deg, rgba(58,160,255,0), #3aa0ff 40%, #3ef0c4); }
@@ -19,18 +17,18 @@
 
   .place { position: absolute; left: 26px; top: 20px; font-size: 20px; font-weight: 500; letter-spacing: .06em; }
   .date { position: absolute; left: 82px; top: 23px; font-size: 16px; font-weight: 300; opacity: .65; white-space: nowrap; }
-  .clock { position: absolute; right: 24px; top: 18px; font-family: 'Outfit', sans-serif; font-weight: 300;
+  .clock { position: absolute; right: 24px; top: 18px; font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; font-weight: 300;
     font-size: 22px; letter-spacing: .04em; }
 
   .icon { position: absolute; left: 22px; top: 68px; width: 84px; height: 84px; }
-  .temp { position: absolute; left: 116px; top: 52px; font-family: 'Outfit', sans-serif; font-weight: 200;
+  .temp { position: absolute; left: 116px; top: 52px; font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; font-weight: 200;
     font-size: 94px; line-height: 1; letter-spacing: -.03em; white-space: nowrap; }
   .temp .deg { font-size: 40px; font-weight: 300; vertical-align: top; margin-left: 2px; position: relative; top: 10px; }
   .now { position: absolute; left: 122px; top: 150px; font-size: 13px; letter-spacing: .2em; opacity: .55; }
 
   .side { position: absolute; right: 24px; top: 70px; width: 76px; text-align: right; }
   .side .k { font-size: 13px; opacity: .6; letter-spacing: .1em; }
-  .side .v { font-family: 'Outfit', sans-serif; font-weight: 400; font-size: 26px; line-height: 1.15; margin-bottom: 8px; }
+  .side .v { font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; font-weight: 400; font-size: 26px; line-height: 1.15; margin-bottom: 8px; }
   .side .v.hi { color: #ffb36b; }
   .side .v.pop { color: #6cc4ff; }
 

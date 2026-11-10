@@ -4,14 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=122, height=1680, initial-scale=1">
 <title>縦帯 電池ゲージ 122x1680</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500&family=Outfit:wght@200;400;600&display=swap" rel="stylesheet">
 <style>
   html, body { margin: 0; padding: 0; }
   body {
     width: 122px; height: 1680px; overflow: hidden; position: relative;
     background: linear-gradient(180deg, #0d1426 0%, #0a0f1d 55%, #070b16 100%);
-    font-family: 'Noto Sans JP', 'Noto Sans CJK JP', sans-serif; color: #eef3ff;
+    font-family: 'Noto Sans CJK JP', 'Noto Sans JP', 'Source Han Sans JP', 'Hiragino Sans', sans-serif; color: #eef3ff;
   }
   .edge { position: absolute; left: 0; top: 0; width: 2px; height: 1680px;
     background: linear-gradient(180deg, rgba(62,240,196,0) 0%, rgba(62,240,196,.55) 50%, rgba(58,160,255,0) 100%); }
@@ -36,13 +34,13 @@
     background: repeating-linear-gradient(0deg, transparent 0, transparent 101px, rgba(10,15,29,.9) 101px, rgba(10,15,29,.9) 105.6px); }
 
   .pct { position: absolute; left: 0; width: 122px; top: 1318px; text-align: center;
-    font-family: 'Outfit', sans-serif; font-weight: 400; font-size: 30px; letter-spacing: .02em; }
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; font-weight: 400; font-size: 30px; letter-spacing: .02em; }
   .pct small { font-size: 16px; opacity: .6; margin-left: 2px; }
 
   .vtext { position: absolute; top: 1392px; left: 0; width: 122px; height: 260px; text-align: center; }
   .vtext .jp { writing-mode: vertical-rl; display: inline-block; font-size: 40px; font-weight: 500;
     letter-spacing: .32em; line-height: 1; vertical-align: top; }
-  .vtext .en { writing-mode: vertical-rl; display: inline-block; font-family: 'Outfit', sans-serif;
+  .vtext .en { writing-mode: vertical-rl; display: inline-block; font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     font-weight: 200; font-size: 15px; letter-spacing: .42em; opacity: .55; margin-left: 10px;
     vertical-align: top; line-height: 1; }
 
