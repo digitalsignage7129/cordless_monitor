@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=360, height=240, initial-scale=1">
+<title>天気・気温 360x240</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 360px; height: 240px; overflow: hidden; position: relative;
+    background: linear-gradient(140deg, #0c1a2a 0%, #0a0f1d 55%, #0d1426 100%);
+    font-family: 'Noto Sans JP', 'Noto Sans CJK JP', sans-serif; color: #eef3ff;
+  }
+  .topline { position: absolute; left: 0; top: 0; width: 360px; height: 3px;
+    background: linear-gradient(90deg, rgba(58,160,255,0), #3aa0ff 40%, #3ef0c4); }
+  .sep { position: absolute; left: 0; top: 0; width: 1px; height: 240px; background: rgba(238,243,255,.14); }
+
+  .place { position: absolute; left: 26px; top: 20px; font-size: 20px; font-weight: 500; letter-spacing: .06em; }
+  .date { position: absolute; left: 82px; top: 23px; font-size: 16px; font-weight: 300; opacity: .65; white-space: nowrap; }
+  .clock { position: absolute; right: 24px; top: 18px; font-family: 'Outfit', sans-serif; font-weight: 300;
+    font-size: 22px; letter-spacing: .04em; }
+
+  .icon { position: absolute; left: 22px; top: 68px; width: 84px; height: 84px; }
+  .temp { position: absolute; left: 116px; top: 52px; font-family: 'Outfit', sans-serif; font-weight: 200;
+    font-size: 94px; line-height: 1; letter-spacing: -.03em; white-space: nowrap; }
+  .temp .deg { font-size: 40px; font-weight: 300; vertical-align: top; margin-left: 2px; position: relative; top: 10px; }
+  .now { position: absolute; left: 122px; top: 150px; font-size: 13px; letter-spacing: .2em; opacity: .55; }
+
+  .side { position: absolute; right: 24px; top: 70px; width: 76px; text-align: right; }
+  .side .k { font-size: 13px; opacity: .6; letter-spacing: .1em; }
+  .side .v { font-family: 'Outfit', sans-serif; font-weight: 400; font-size: 26px; line-height: 1.15; margin-bottom: 8px; }
+  .side .v.hi { color: #ffb36b; }
+  .side .v.pop { color: #6cc4ff; }
+
+  .divider { position: absolute; left: 24px; right: 24px; top: 176px; height: 1px; background: rgba(238,243,255,.14); }
+  .tag { position: absolute; left: 24px; top: 194px; font-size: 13px; padding: 3px 9px; border-radius: 12px;
+    border: 1px solid rgba(62,240,196,.6); color: #3ef0c4; letter-spacing: .08em; }
+  .wtext { position: absolute; left: 82px; right: 24px; top: 188px; font-size: 24px; font-weight: 500;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .04em; }
+</style>
+</head>
+<body>
+  <div class="topline"></div>
+  <div class="sep"></div>
+
+  <div class="place" id="place"></div>
+  <div class="date" id="date"></div>
+  <div class="clock" id="clock"></div>
+
+  <svg class="icon" id="icon" viewBox="0 0 84 84" aria-hidden="true"></svg>
+  <div class="temp"><span id="temp">--</span><span class="deg">°</span></div>
+  <div class="now">現在の気温</div>
+
+  <div class="side">
+    <div class="k" id="hiLabel">最高</div><div class="v hi" id="hi">--°</div>
+    <div class="k">降水</div><div class="v pop" id="pop">--%</div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="tag" id="tag">今日</div>
+  <div class="wtext" id="wtext">取得中…</div>
+
+<script>
+  /* ===== 地域の設定（地域を変えるときはここだけ書き換え） ===== */
+  var PLACE_NAME    = '大阪';
+  var FORECAST_CODE = '270000';  /* 府県予報区（大阪府） */
+  var AREA_CODE     = '270000';  /* 一次細分区域（天気・降水確率） */
+  var TEMP_CODE     = '62078';   /* 予報の気温地点（大阪） */
+  var AMEDAS_CODE   = '62078';   /* 現在の気温を取るアメダス地点（大阪） */
+  var REFRESH_MIN   = 10;        /* 更新間隔（分） */
+  /* ============================================================ */
+
+  var BASE = 'https://www.jma.go.jp/bosai/';
+  var WEEK = ['日','月','火','水','木','金','土'];
+  function $(id) { return document.getElementById(id); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function ymd(d) { return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()); }
+
+  $('place').textContent = PLACE_NAME;
+  $('date').style.left = (26 + PLACE_NAME.length * 21 + 10) + 'px';
+
+  function tickClock() {
+    var d = new Date();
+    $('clock').textContent = pad(d.getHours()) + ':' + pad(d.getMinutes());
+    $('date').textContent = (d.getMonth() + 1) + '/' + d.getDate() + ' (' + WEEK[d.getDay()] + ')';
+  }
+  tickClock(); setInterval(tickClock, 1000 * 10);
+
+  /* ---- 天気アイコン（コードの先頭桁で判定、夜は晴れを月に） ---- */
+  var C1 = '#ffc861', CC = 'rgba(238,243,255,.92)', CR = '#6cc4ff';
+  function cloud(x, y, s, fill) {
+    return '<path transform="translate(' + x + ' ' + y + ') scale(' + s + ')" fill="' + fill + '" d="M14 40 H52 A12 12 0 0 0 52 16 A17 17 0 0 0 20 14 A13 13 0 0 0 14 40 Z"/>';
+  }
+  function iconSvg(code, night) {
+    var k = String(code).charAt(0), s = '';
+    if (k === '1') {
+      if (night) {
+        s = '<path fill="' + C1 + '" d="M52 14 A28 28 0 1 0 70 56 A22 22 0 1 1 52 14 Z"/>';
+      } else {
+        s = '<circle cx="42" cy="42" r="16" fill="' + C1 + '"/>';
+        for (var i = 0; i < 8; i++) {
+          var a = i * Math.PI / 4, x1 = 42 + Math.cos(a) * 25, y1 = 42 + Math.sin(a) * 25,
+              x2 = 42 + Math.cos(a) * 34, y2 = 42 + Math.sin(a) * 34;
+          s += '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + C1 + '" stroke-width="4" stroke-linecap="round"/>';
+        }
+      }
+    } else if (k === '2') {
+      s = '<circle cx="54" cy="26" r="12" fill="' + C1 + '" opacity=".55"/>' + cloud(6, 14, 1.1, CC);
+    } else if (k === '3') {
+      s = cloud(6, 4, 1.1, CC);
+      for (var j = 0; j < 3; j++) s += '<line x1="' + (26 + j * 14) + '" y1="58" x2="' + (21 + j * 14) + '" y2="74" stroke="' + CR + '" stroke-width="4" stroke-linecap="round"/>';
+    } else if (k === '4') {
+      s = cloud(6, 4, 1.1, CC);
+      for (var m = 0; m < 3; m++) s += '<circle cx="' + (26 + m * 14) + '" cy="' + (64 + (m % 2) * 8) + '" r="4" fill="#fff"/>';
+    } else {
+      s = cloud(6, 14, 1.1, CC);
+    }
+    return s;
+  }
+
+  function cleanText(t) {
+    return String(t || '').replace(/[\s　]+/g, '').replace(/くもり/g, '曇り').replace(/所により.*$/, '');
+  }
+
+  /* ---- 予報（天気・最高気温・降水確率） ---- */
+  function loadForecast() {
+    return fetch(BASE + 'forecast/data/forecast/' + FORECAST_CODE + '.json', { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var ts = data[0].timeSeries, now = new Date(), today = ymd(now);
+
+        var wa = null;
+        ts[0].areas.forEach(function (a) { if (a.area.code === AREA_CODE) wa = a; });
+        if (!wa) wa = ts[0].areas[0];
+        var wDate = new Date(ts[0].timeDefines[0]);
+        var night = now.getHours() >= 18 || now.getHours() < 5;
+        $('icon').innerHTML = iconSvg(wa.weatherCodes[0], night);
+        $('wtext').textContent = cleanText(wa.weathers ? wa.weathers[0] : '');
+        $('tag').textContent = ymd(wDate) === today ? '今日' : '明日';
+
+        var pa = null;
+        ts[1].areas.forEach(function (a) { if (a.area.code === AREA_CODE) pa = a; });
+        if (!pa) pa = ts[1].areas[0];
+        var popVal = null;
+        for (var i = 0; i < ts[1].timeDefines.length; i++) {
+          var st = new Date(ts[1].timeDefines[i]);
+          var en = i + 1 < ts[1].timeDefines.length ? new Date(ts[1].timeDefines[i + 1]) : new Date(st.getTime() + 6 * 3600000);
+          if (now >= st && now < en && pa.pops[i] !== '') { popVal = pa.pops[i]; break; }
+        }
+        if (popVal === null) { for (var p = 0; p < pa.pops.length; p++) if (pa.pops[p] !== '') { popVal = pa.pops[p]; break; } }
+        $('pop').textContent = (popVal === null ? '--' : popVal) + '%';
+
+        var ta = null;
+        ts[2].areas.forEach(function (a) { if (a.area.code === TEMP_CODE) ta = a; });
+        if (!ta) ta = ts[2].areas[0];
+        var hiToday = null, hiNext = null;
+        ts[2].timeDefines.forEach(function (t, k) {
+          var d = new Date(t);
+          if (d.getHours() !== 9 || ta.temps[k] === '') return;
+          if (ymd(d) === today) hiToday = ta.temps[k];
+          else if (hiNext === null && ymd(d) > today) hiNext = ta.temps[k];
+        });
+        if (hiToday !== null) { $('hiLabel').textContent = '最高'; $('hi').textContent = hiToday + '°'; }
+        else if (hiNext !== null) { $('hiLabel').textContent = '明日最高'; $('hi').textContent = hiNext + '°'; }
+      });
+  }
+
+  /* ---- 現在の気温（アメダス実況） ---- */
+  function loadNowTemp() {
+    return fetch(BASE + 'amedas/data/latest_time.txt', { cache: 'no-store' })
+      .then(function (r) { return r.text(); })
+      .then(function (txt) {
+        var latest = new Date(txt.trim());
+        function blockUrl(d) {
+          return BASE + 'amedas/data/point/' + AMEDAS_CODE + '/' + ymd(d) + '_' + pad(Math.floor(d.getHours() / 3) * 3) + '.json';
+        }
+        function pick(json) {
+          var best = null;
+          Object.keys(json).sort().forEach(function (k) {
+            if (json[k].temp && json[k].temp[0] !== null) best = json[k].temp[0];
+          });
+          return best;
+        }
+        return fetch(blockUrl(latest), { cache: 'no-store' })
+          .then(function (r) { return r.ok ? r.json() : {}; })
+          .then(function (j) {
+            var v = pick(j);
+            if (v !== null) return v;
+            var prev = new Date(latest.getTime() - 3 * 3600000);
+            return fetch(blockUrl(prev), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(pick);
+          });
+      })
+      .then(function (v) { if (v !== null && v !== undefined) $('temp').textContent = Math.round(v); });
+  }
+
+  function refresh() {
+    loadForecast().catch(function () { if ($('wtext').textContent === '取得中…') $('wtext').textContent = '--'; });
+    loadNowTemp().catch(function () {});
+  }
+  refresh();
+  setInterval(refresh, REFRESH_MIN * 60 * 1000);
+</script>
+</body>
+</html>

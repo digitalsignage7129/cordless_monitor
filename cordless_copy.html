@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=720, height=240, initial-scale=1">
+<title>キャッチコピー・特長 720x240</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&family=Outfit:wght@200;400&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 720px; height: 240px; overflow: hidden; position: relative;
+    background: linear-gradient(120deg, #0d1426 0%, #0a0f1d 60%, #0c1a2a 100%);
+    font-family: 'Noto Sans JP', 'Noto Sans CJK JP', sans-serif; color: #eef3ff;
+  }
+  .topline { position: absolute; left: 0; top: 0; width: 720px; height: 3px;
+    background: linear-gradient(90deg, #3ef0c4, #3aa0ff 60%, rgba(58,160,255,0)); }
+
+  .slide { position: absolute; left: 44px; top: 0; width: 640px; height: 240px;
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .8s ease, transform .8s ease; }
+  .slide.on { opacity: 1; transform: translateY(0); }
+
+  /* キャッチコピー */
+  .catch .main { position: absolute; top: 58px; left: 0; font-size: 54px; font-weight: 700;
+    letter-spacing: .04em; white-space: nowrap; line-height: 1.2; }
+  .catch .main em { font-style: normal;
+    background: linear-gradient(90deg, #3ef0c4, #3aa0ff); -webkit-background-clip: text;
+    background-clip: text; color: transparent; }
+  .catch .sub { position: absolute; top: 148px; left: 2px; font-family: 'Outfit', sans-serif;
+    font-weight: 200; font-size: 22px; letter-spacing: .38em; opacity: .7; white-space: nowrap; }
+
+  /* 特長 */
+  .feat .num { position: absolute; top: 46px; left: 0; width: 120px; font-family: 'Outfit', sans-serif;
+    font-weight: 200; font-size: 104px; line-height: 1; color: #3ef0c4; letter-spacing: -.02em; }
+  .feat .bar { position: absolute; top: 62px; left: 138px; width: 2px; height: 112px;
+    background: rgba(238,243,255,.25); }
+  .feat .title { position: absolute; top: 56px; left: 166px; font-size: 48px; font-weight: 700;
+    letter-spacing: .04em; white-space: nowrap; line-height: 1.2; }
+  .feat .desc { position: absolute; top: 132px; left: 168px; width: 472px; font-size: 22px; font-weight: 300;
+    line-height: 1.5; opacity: .82; }
+
+  .dots { position: absolute; right: 36px; bottom: 26px; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 4px; margin-left: 8px;
+    background: rgba(238,243,255,.25); transition: width .5s ease, background .5s ease; }
+  .dot.on { width: 28px; background: #3ef0c4; }
+
+  .progress { position: absolute; left: 0; bottom: 0; height: 3px; width: 720px;
+    background: rgba(62,240,196,.6); transform-origin: 0 50%; transform: scaleX(0); }
+</style>
+</head>
+<body>
+  <div class="topline"></div>
+  <div id="slides"></div>
+  <div class="dots" id="dots"></div>
+  <div class="progress" id="progress"></div>
+
+<script>
+  /* ===== 表示内容の設定（ここを書き換えれば文言を変えられます） ===== */
+  var SECONDS = 5;   /* 1枚あたりの表示秒数 */
+  var SLIDES = [
+    { type: 'catch', main: 'コードレスで、<em>どこでも。</em>', sub: 'RECHARGEABLE DISPLAY' },
+    { type: 'feat', num: '01', title: '電源コード不要',     desc: 'コンセントのない場所でも、そのまま使える' },
+    { type: 'feat', num: '02', title: 'ネットで遠隔更新',   desc: 'Wi-Fi経由で、表示内容をいつでも切り替え' },
+    { type: 'feat', num: '03', title: '置き場所を選ばない', desc: '店頭・受付・イベント会場へ、さっと移動' }
+  ];
+  /* ===================================================================== */
+
+  var box = document.getElementById('slides'), dotsBox = document.getElementById('dots');
+  var els = [], dots = [];
+  SLIDES.forEach(function (s) {
+    var d = document.createElement('div');
+    if (s.type === 'catch') {
+      d.className = 'slide catch';
+      d.innerHTML = '<div class="main">' + s.main + '</div><div class="sub">' + s.sub + '</div>';
+    } else {
+      d.className = 'slide feat';
+      d.innerHTML = '<div class="num">' + s.num + '</div><div class="bar"></div>' +
+        '<div class="title">' + s.title + '</div><div class="desc">' + s.desc + '</div>';
+    }
+    box.appendChild(d); els.push(d);
+    var dot = document.createElement('span'); dot.className = 'dot';
+    dotsBox.appendChild(dot); dots.push(dot);
+  });
+
+  var progress = document.getElementById('progress');
+  var idx = -1, slideStart = 0;
+
+  function show(i) {
+    els.forEach(function (e, k) { e.className = e.className.replace(' on', '') + (k === i ? ' on' : ''); });
+    dots.forEach(function (e, k) { e.className = 'dot' + (k === i ? ' on' : ''); });
+  }
+  function frame(now) {
+    if (idx < 0 || now - slideStart >= SECONDS * 1000) {
+      idx = (idx + 1) % SLIDES.length; slideStart = now; show(idx);
+    }
+    progress.style.transform = 'scaleX(' + Math.min(1, (now - slideStart) / (SECONDS * 1000)).toFixed(4) + ')';
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+</script>
+</body>
+</html>

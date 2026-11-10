@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=122, height=1680, initial-scale=1">
+<title>縦帯 電池ゲージ 122x1680</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500&family=Outfit:wght@200;400;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 122px; height: 1680px; overflow: hidden; position: relative;
+    background: linear-gradient(180deg, #0d1426 0%, #0a0f1d 55%, #070b16 100%);
+    font-family: 'Noto Sans JP', 'Noto Sans CJK JP', sans-serif; color: #eef3ff;
+  }
+  .edge { position: absolute; left: 0; top: 0; width: 2px; height: 1680px;
+    background: linear-gradient(180deg, rgba(62,240,196,0) 0%, rgba(62,240,196,.55) 50%, rgba(58,160,255,0) 100%); }
+
+  .bolt { position: absolute; left: 37px; top: 88px; width: 48px; height: 64px; }
+  .bolt path { fill: #3ef0c4; }
+  .bolt.full path { animation: blink 1s ease-in-out infinite; }
+
+  .battery { position: absolute; left: 29px; top: 210px; width: 64px; height: 1080px; }
+  .cap { position: absolute; left: 47px; top: 194px; width: 28px; height: 12px;
+    border-radius: 6px 6px 2px 2px; background: rgba(238,243,255,.55); }
+  .shell { position: absolute; left: 0; top: 0; width: 58px; height: 1074px;
+    border: 3px solid rgba(238,243,255,.55); border-radius: 20px; overflow: hidden; }
+  .fill { position: absolute; left: 6px; right: 6px; bottom: 6px; height: 1056px;
+    border-radius: 13px; transform-origin: 50% 100%; transform: scaleY(0);
+    background: linear-gradient(0deg, #3ef0c4 0%, #36c9e6 50%, #3aa0ff 100%);
+    box-shadow: 0 0 24px rgba(62,240,196,.45); }
+  .sheen { position: absolute; left: 6px; right: 6px; height: 140px; bottom: 6px; border-radius: 13px;
+    background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.35) 50%, rgba(255,255,255,0) 100%);
+    opacity: 0; }
+  .ticks { position: absolute; left: 6px; right: 6px; top: 6px; bottom: 6px;
+    background: repeating-linear-gradient(0deg, transparent 0, transparent 101px, rgba(10,15,29,.9) 101px, rgba(10,15,29,.9) 105.6px); }
+
+  .pct { position: absolute; left: 0; width: 122px; top: 1318px; text-align: center;
+    font-family: 'Outfit', sans-serif; font-weight: 400; font-size: 30px; letter-spacing: .02em; }
+  .pct small { font-size: 16px; opacity: .6; margin-left: 2px; }
+
+  .vtext { position: absolute; top: 1392px; left: 0; width: 122px; height: 260px; text-align: center; }
+  .vtext .jp { writing-mode: vertical-rl; display: inline-block; font-size: 40px; font-weight: 500;
+    letter-spacing: .32em; line-height: 1; vertical-align: top; }
+  .vtext .en { writing-mode: vertical-rl; display: inline-block; font-family: 'Outfit', sans-serif;
+    font-weight: 200; font-size: 15px; letter-spacing: .42em; opacity: .55; margin-left: 10px;
+    vertical-align: top; line-height: 1; }
+
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+</style>
+</head>
+<body>
+  <div class="edge"></div>
+
+  <svg class="bolt" id="bolt" viewBox="0 0 48 64" aria-hidden="true">
+    <path d="M28 0 L4 36 H22 L18 64 L44 24 H26 Z"/>
+  </svg>
+
+  <div class="cap"></div>
+  <div class="battery">
+    <div class="shell">
+      <div class="fill" id="fill"></div>
+      <div class="sheen" id="sheen"></div>
+      <div class="ticks"></div>
+    </div>
+  </div>
+
+  <div class="pct"><span id="pct">0</span><small>%</small></div>
+
+  <div class="vtext">
+    <span class="jp">充電式</span><span class="en">CORDLESS</span>
+  </div>
+
+<script>
+  /* 1周の流れ: 0→100%まで充電(FILL秒) → 満タンで待機(HOLD秒) → すっと消えて最初から */
+  var FILL = 6.0, HOLD = 2.5, RESET = 0.6;
+  var CYCLE = FILL + HOLD + RESET;
+  var fill = document.getElementById('fill');
+  var sheen = document.getElementById('sheen');
+  var pct = document.getElementById('pct');
+  var bolt = document.getElementById('bolt');
+  var start = null;
+
+  function ease(t) { return 1 - Math.pow(1 - t, 2.2); }
+
+  function frame(now) {
+    if (start === null) start = now;
+    var t = ((now - start) / 1000) % CYCLE;
+    var level, opacity = 1, sheenY = 0, sheenOp = 0;
+
+    if (t < FILL) {
+      level = ease(t / FILL);
+      sheenY = -(1056 * level - 140) * Math.max(0, Math.min(1, level));
+      sheenOp = level > .05 ? .9 : 0;
+      bolt.setAttribute('class', 'bolt');
+    } else if (t < FILL + HOLD) {
+      level = 1;
+      var h = (t - FILL) / HOLD;
+      sheenY = -(916 * h);
+      sheenOp = .9 * (1 - h);
+      bolt.setAttribute('class', 'bolt full');
+    } else {
+      level = 1;
+      opacity = 1 - (t - FILL - HOLD) / RESET;
+    }
+
+    fill.style.transform = 'scaleY(' + level.toFixed(4) + ')';
+    fill.style.opacity = opacity.toFixed(3);
+    sheen.style.transform = 'translateY(' + Math.min(0, sheenY).toFixed(1) + 'px)';
+    sheen.style.opacity = (sheenOp * opacity).toFixed(3);
+    pct.textContent = opacity < 1 ? '100' : Math.round(level * 100);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+</script>
+</body>
+</html>
