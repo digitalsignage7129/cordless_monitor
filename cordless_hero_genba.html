@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>メイン訴求 1080x560</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0a0f1d;
+    -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  #stage { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0;
+    font-family: 'Noto Sans CJK JP', 'Noto Sans JP', 'Source Han Sans JP', 'Hiragino Sans', sans-serif; color: #eef3ff; }
+  .num { font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; }
+  #stage { width: 1080px; height: 560px; background: #0b1222; }
+  .label { position: absolute; left: 0; top: 0; width: 1080px; height: 92px; background: #ffd400; color: #111;
+    text-align: center; line-height: 92px; font-size: 46px; font-weight: 700; letter-spacing: .06em; white-space: nowrap; }
+  .main { position: absolute; left: 0; top: 118px; width: 1080px; text-align: center; font-size: 118px; font-weight: 900;
+    line-height: 1.1; letter-spacing: .02em; white-space: nowrap; color: #fff; }
+  .main em { font-style: normal; color: #3ef0c4; }
+  .sub { position: absolute; left: 0; top: 278px; width: 1080px; text-align: center; font-size: 46px; font-weight: 700;
+    white-space: nowrap; color: #eef3ff; }
+  .box { position: absolute; top: 368px; width: 320px; height: 160px; border-radius: 16px; background: #16243f;
+    border: 3px solid #3ef0c4; text-align: center; }
+  .box .t { margin-top: 26px; font-size: 40px; font-weight: 900; color: #3ef0c4; white-space: nowrap; }
+  .box .s { margin-top: 10px; font-size: 28px; font-weight: 500; color: #fff; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="label" id="label"></div>
+  <div class="main" id="main"></div>
+  <div class="sub" id="sub"></div>
+  <div class="box" style="left:30px"><div class="t" id="b1t"></div><div class="s" id="b1s"></div></div>
+  <div class="box" style="left:380px"><div class="t" id="b2t"></div><div class="s" id="b2s"></div></div>
+  <div class="box" style="left:730px"><div class="t" id="b3t"></div><div class="s" id="b3s"></div></div>
+</div>
+
+<script>
+  /* ===== 文言の設定（ここを書き換えれば変えられます） ===== */
+  var LABEL = '工事現場向け　充電式モニター';
+  var MAIN  = '<em>コンセント</em>不要！';
+  var SUB   = 'バッテリーで動く 43インチ モニター';
+  var BOXES = [
+    ['電源工事なし', '置くだけですぐ使える'],
+    ['遠くから変更', '事務所から表示を切替'],
+    ['移動もラクラク', '現場のどこにでも']
+  ];
+  /* ======================================================== */
+  document.getElementById('label').textContent = LABEL;
+  document.getElementById('main').innerHTML = MAIN;
+  document.getElementById('sub').textContent = SUB;
+  for (var i = 0; i < 3; i++) {
+    document.getElementById('b' + (i + 1) + 't').textContent = BOXES[i][0];
+    document.getElementById('b' + (i + 1) + 's').textContent = BOXES[i][1];
+  }
+</script>
+<script>
+  /* 表示される枠の大きさに合わせて、デザイン全体を縮小する */
+  (function () {
+    var W = 1080, H = 560, st = document.getElementById('stage');
+    function fit() {
+      var vv = window.visualViewport;
+      var w = Math.max(1, (vv && vv.width) || window.innerWidth || W);
+      var h = Math.max(1, (vv && vv.height) || window.innerHeight || H);
+      var s = Math.min(w / W, h / H, 1);
+      if (!(s > 0) || !isFinite(s)) s = 1;
+      st.style.transform = (s === 1) ? 'none' : 'scale(' + s + ')';
+      document.documentElement.style.width = w + 'px';
+      document.documentElement.style.height = h + 'px';
+      document.body.style.width = w + 'px';
+      document.body.style.height = h + 'px';
+    }
+    window.addEventListener('resize', fit);
+    window.addEventListener('orientationchange', function () { setTimeout(fit, 50); });
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', fit);
+    fit(); setTimeout(fit, 0); setTimeout(fit, 100); setTimeout(fit, 500); setTimeout(fit, 2000);
+  })();
+</script>
+</body>
+</html>

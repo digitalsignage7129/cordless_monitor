@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=304, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>使い方 304x1000</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0a0f1d;
+    -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  #stage { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0;
+    font-family: 'Noto Sans CJK JP', 'Noto Sans JP', 'Source Han Sans JP', 'Hiragino Sans', sans-serif; color: #eef3ff; }
+  .num { font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; }
+  #stage { width: 304px; height: 1000px; background: #0b1222; }
+  .title { position: absolute; left: 0; top: 0; width: 304px; height: 96px; background: #ffd400; color: #111;
+    text-align: center; line-height: 96px; font-size: 34px; font-weight: 900; white-space: nowrap; }
+  .row { position: absolute; left: 14px; width: 276px; height: 132px; border-radius: 14px; background: #16243f; }
+  .n { position: absolute; left: 14px; top: 20px; width: 44px; height: 44px; border-radius: 22px; background: #3ef0c4;
+    color: #0b1222; text-align: center; line-height: 44px; font-size: 26px; font-weight: 900; }
+  .t { position: absolute; left: 68px; top: 24px; font-size: 24px; font-weight: 900; color: #fff; white-space: nowrap; }
+  .s { position: absolute; left: 16px; top: 80px; font-size: 22px; font-weight: 500; color: #3ef0c4; white-space: nowrap; }
+  .note { position: absolute; left: 0; width: 304px; top: 880px; text-align: center; font-size: 26px; font-weight: 700;
+    line-height: 1.45; color: #fff; }
+  .note b { color: #ffd400; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="title">現場でこう使う</div>
+  <div class="row" style="top:120px"><div class="n">1</div><div class="t">朝礼・KY活動</div><div class="s">作業内容を大きく表示</div></div>
+  <div class="row" style="top:270px"><div class="n">2</div><div class="t">安全の呼びかけ</div><div class="s">注意事項をすぐ変更</div></div>
+  <div class="row" style="top:420px"><div class="n">3</div><div class="t">熱中症・天気</div><div class="s">暑さ指数も自動表示</div></div>
+  <div class="row" style="top:570px"><div class="n">4</div><div class="t">近隣へのお知らせ</div><div class="s">工事の予定を掲示</div></div>
+  <div class="row" style="top:720px"><div class="n">5</div><div class="t">現場の入口に</div><div class="s">電源なしで設置OK</div></div>
+  <div class="note">電源がない場所でも<br><b>そのまま使えます</b></div>
+</div>
+<script>
+  /* 表示される枠の大きさに合わせて、デザイン全体を縮小する */
+  (function () {
+    var W = 304, H = 1000, st = document.getElementById('stage');
+    function fit() {
+      var vv = window.visualViewport;
+      var w = Math.max(1, (vv && vv.width) || window.innerWidth || W);
+      var h = Math.max(1, (vv && vv.height) || window.innerHeight || H);
+      var s = Math.min(w / W, h / H, 1);
+      if (!(s > 0) || !isFinite(s)) s = 1;
+      st.style.transform = (s === 1) ? 'none' : 'scale(' + s + ')';
+      document.documentElement.style.width = w + 'px';
+      document.documentElement.style.height = h + 'px';
+      document.body.style.width = w + 'px';
+      document.body.style.height = h + 'px';
+    }
+    window.addEventListener('resize', fit);
+    window.addEventListener('orientationchange', function () { setTimeout(fit, 50); });
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', fit);
+    fit(); setTimeout(fit, 0); setTimeout(fit, 100); setTimeout(fit, 500); setTimeout(fit, 2000);
+  })();
+</script>
+</body>
+</html>
