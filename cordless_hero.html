@@ -39,13 +39,27 @@
   .feats { position: absolute; left: 64px; top: 438px; width: 960px; height: 82px; }
   .feat { position: absolute; top: 0; width: 304px; height: 80px; border-radius: 16px;
     border: 1px solid rgba(238,243,255,.18); background: rgba(238,243,255,.03);
-    transition: background .6s ease, border-color .6s ease; }
+    }
   .feat svg { position: absolute; left: 22px; top: 20px; width: 40px; height: 40px; }
-  .feat svg * { stroke: rgba(238,243,255,.75); transition: stroke .6s ease; }
+  .feat svg * { stroke: rgba(238,243,255,.75); }
   .feat .t { position: absolute; left: 78px; top: 0; line-height: 80px; font-size: 28px; font-weight: 500;
     letter-spacing: .04em; white-space: nowrap; }
-  .feat.on { border-color: rgba(62,240,196,.85); background: rgba(62,240,196,.12); }
-  .feat.on svg * { stroke: #3ef0c4; }
+  /* 光の移り変わりはCSSだけで動かす（STBでJSタイマーが止まっても動く） 3つ×2.5秒=7.5秒周期 */
+  .feat { animation: featGlow 7.5s linear infinite both; }
+  .feat svg * { animation: iconGlow 7.5s linear infinite both; }
+  .feat.n2, .feat.n2 svg * { animation-delay: 2.5s; }
+  .feat.n3, .feat.n3 svg * { animation-delay: 5s; }
+  @keyframes featGlow {
+    0%   { border-color: rgba(238,243,255,.18); background-color: rgba(238,243,255,.03); }
+    4%   { border-color: rgba(62,240,196,.85);  background-color: rgba(62,240,196,.12); }
+    30%  { border-color: rgba(62,240,196,.85);  background-color: rgba(62,240,196,.12); }
+    36%  { border-color: rgba(238,243,255,.18); background-color: rgba(238,243,255,.03); }
+    100% { border-color: rgba(238,243,255,.18); background-color: rgba(238,243,255,.03); }
+  }
+  @keyframes iconGlow {
+    0% { stroke: rgba(238,243,255,.75); } 4% { stroke: #3ef0c4; } 30% { stroke: #3ef0c4; }
+    36% { stroke: rgba(238,243,255,.75); } 100% { stroke: rgba(238,243,255,.75); }
+  }
 
   @keyframes shimmer { 0% { background-position: 0 0; } 100% { background-position: -1200px 0; } }
   @keyframes pulse { 0%,100% { opacity: .22; } 50% { opacity: .42; } }
@@ -71,13 +85,13 @@
       </svg>
       <div class="t" id="f1"></div>
     </div>
-    <div class="feat" style="left:328px">
+    <div class="feat n2" style="left:328px">
       <svg viewBox="0 0 40 40" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
         <path d="M4 15 A23 23 0 0 1 36 15 M9 21 A15 15 0 0 1 31 21 M14 27 A8 8 0 0 1 26 27"/><path d="M20 33 L20 33.2"/>
       </svg>
       <div class="t" id="f2"></div>
     </div>
-    <div class="feat" style="left:656px">
+    <div class="feat n3" style="left:656px">
       <svg viewBox="0 0 40 40" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
         <path d="M20 4 V36 M4 20 H36 M15 9 L20 4 L25 9 M15 31 L20 36 L25 31 M9 15 L4 20 L9 25 M31 15 L36 20 L31 25"/>
       </svg>
@@ -94,18 +108,11 @@
   var CATCH_1  = 'コードレスで、';
   var CATCH_2  = 'どこでも。';
   var FEATURES = ['電源コード不要', 'Wi-Fiで遠隔更新', '置き場所自由'];
-  var HIGHLIGHT_SEC = 2.5;   /* 特長を1つずつ光らせる間隔（秒） */
   /* ======================================================== */
   document.getElementById('pname').textContent = PRODUCT;
   document.getElementById('c1').textContent = CATCH_1;
   document.getElementById('c2').textContent = CATCH_2;
   for (var i = 0; i < 3; i++) document.getElementById('f' + (i + 1)).textContent = FEATURES[i];
-  var feats = document.querySelectorAll('.feat'), cur = -1;
-  function next() {
-    cur = (cur + 1) % feats.length;
-    for (var k = 0; k < feats.length; k++) feats[k].className = 'feat' + (k === cur ? ' on' : '');
-  }
-  next(); setInterval(next, HIGHLIGHT_SEC * 1000);
 </script>
 <script>
   /* 表示される枠の大きさに合わせて、デザイン全体を縮小する */
