@@ -2,12 +2,14 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=720, height=240, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>キャッチコピー・特長 720x240</title>
 <style>
-  html, body { margin: 0; padding: 0; }
-  body {
-    width: 720px; height: 240px; overflow: hidden; position: relative;
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0a0f1d;
+    -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  #stage {
+    width: 720px; height: 240px; overflow: hidden; position: absolute; left: 0; top: 0;
+    transform-origin: 0 0;
     background: linear-gradient(120deg, #0d1426 0%, #0a0f1d 60%, #0c1a2a 100%);
     font-family: 'Noto Sans CJK JP', 'Noto Sans JP', 'Source Han Sans JP', 'Hiragino Sans', sans-serif; color: #eef3ff;
   }
@@ -48,10 +50,13 @@
 </style>
 </head>
 <body>
+<div id="stage">
   <div class="topline"></div>
   <div id="slides"></div>
   <div class="dots" id="dots"></div>
   <div class="progress" id="progress"></div>
+
+</div>
 
 <script>
   /* ===== 表示内容の設定（ここを書き換えれば文言を変えられます） ===== */
@@ -96,6 +101,21 @@
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+</script>
+<script>
+  /* 表示される枠の大きさに合わせて、デザイン全体を拡大・縮小する */
+  (function () {
+    var W = 720, H = 240, st = document.getElementById('stage');
+    function fit() {
+      var w = window.innerWidth || document.documentElement.clientWidth;
+      var h = window.innerHeight || document.documentElement.clientHeight;
+      if (!w || !h) return;
+      var s = Math.min(w / W, h / H);
+      st.style.transform = 'translate(' + ((w - W * s) / 2) + 'px,' + ((h - H * s) / 2) + 'px) scale(' + s + ')';
+    }
+    fit(); window.addEventListener('resize', fit);
+    setTimeout(fit, 300); setTimeout(fit, 1500); setInterval(fit, 10000);
+  })();
 </script>
 </body>
 </html>
